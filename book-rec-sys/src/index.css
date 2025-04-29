@@ -1,11 +1,10 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Georgia;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #0F9F90;;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,15 +23,22 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color:#F2F0EF;
 }
 
 h1 {
   font-size: 3.2em;
-  line-height: 1.1;
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+h2 {
+  font-size: 1.8em;
+  margin: 0px;
+  font-weight: normal;
+  text-align: center;
 }
 
 button {
@@ -54,15 +60,34 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  max-width: 600px;
+}
+
+.genre-button {
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.genre-button:hover {
+  background-color: #f0f0f0;
+}
+
+.two-column-container {
+  display: flex;
+  gap: 2rem; /* spacing between columns */
+  padding: 1rem;
+}
+
+.two-column-container > div {
+  flex: 1; /* make both divs take equal width */
 }
