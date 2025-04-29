@@ -117,3 +117,9 @@ button:focus-visible {
   top: 112px;
   left: 100px;
 }
+
+.genre-grid-icon {
+  position: relative;
+  top: 122px;
+  left: 100px;
+}

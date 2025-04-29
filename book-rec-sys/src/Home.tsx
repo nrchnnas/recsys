@@ -1,6 +1,5 @@
 import { RiBookShelfLine } from "react-icons/ri";
 import { FaBookBookmark } from "react-icons/fa6";
-import { IoIosArrowForward } from "react-icons/io";
 import { useState } from 'react';
 import GenreGrid from './GenreGrid';
 
@@ -65,19 +64,6 @@ function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
             <div id="panel">
             <h2>Your Stats</h2>
 
-            <ul className="panel-links">
-                <li onClick={onViewShelvesClick} style={{ cursor: 'pointer' }}>
-                    <RiBookShelfLine className="icon" />
-                    <span>View Your Shelves</span>
-                    <IoIosArrowForward className="icon"/>
-                </li>
-                <li>
-                    <FaBookBookmark className="icon" />
-                    <span>View Your Reviews</span>
-                    <IoIosArrowForward className="icon"/>
-                </li>
-            </ul>
-
             <div className="currently-reading">
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <input
@@ -103,11 +89,26 @@ function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
             </div>
             
             <div className="panel-actions">
+                <button className="panel-button" onClick={onViewShelvesClick} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <RiBookShelfLine className="icon" />
+                    View Your Shelves
+                    </span>
+                </button>
+
+                <button className="panel-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <FaBookBookmark className="icon" />
+                    View Your Reviews
+                    </span>
+                </button>
+
                 <button className="panel-button">Add New Current Read</button>
                 <button className="panel-button">Add New Review</button>
+                </div>
+
             </div>
         </div>
-            </div>
     );
 }
 

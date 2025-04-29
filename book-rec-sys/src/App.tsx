@@ -2,6 +2,7 @@ import './App.css';
 import Title, { Panel } from './Home';
 import GenreGrid from './GenreGrid';
 import { useState } from 'react';
+import { IoIosArrowBack } from "react-icons/io";
 
 const genres = [
   "Children", "Comics & Graphic", "Mystery, Thriller & Crime", "Poetry",
@@ -29,9 +30,29 @@ function Web() {
 
       <div className="two-column-container">
         <div>
-          <h3 className="genre-grid" style={{ fontStyle: 'italic' }}>
-            {activeView === 'genre' ? 'Search By Genre' : 'Your Shelves'}
-          </h3>
+        {activeView === 'genre' ? (
+        <h3 className="genre-grid" style={{ fontStyle: 'italic' }}>
+          Search By Genre
+        </h3>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+          <button
+            onClick={() => setActiveView('genre')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#0F9F90',
+              cursor: 'pointer',
+              padding: 0,
+              fontSize: '1.5rem',
+            }}
+             className="genre-grid-icon"
+          >
+            <IoIosArrowBack />
+          </button>
+          <h3 className="genre-grid">Your Shelves</h3>
+        </div>
+        )}
 
           {activeView === 'genre' ? (
             <GenreGrid genres={genres} onGenreClick={handleGenreClick} />
