@@ -37,7 +37,7 @@ function GenreSection() {
     );
 }
 
-function Panel() {
+function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
     const [isChecked, setIsChecked] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [bookTitle, setBookTitle] = useState('');
@@ -66,7 +66,7 @@ function Panel() {
             <h2>Your Stats</h2>
 
             <ul className="panel-links">
-                <li>
+                <li onClick={onViewShelvesClick} style={{ cursor: 'pointer' }}>
                     <RiBookShelfLine className="icon" />
                     <span>View Your Shelves</span>
                     <IoIosArrowForward className="icon"/>
