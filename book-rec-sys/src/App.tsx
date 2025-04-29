@@ -5,8 +5,17 @@ function Web() {
   return (
     <div>
         <Title />
-        <GenreSection />
-        <Panel />
+
+        <div className="two-column-container">
+          <div>
+            <GenreSection />
+          </div>
+
+          <div>
+            <Panel />
+          </div>
+      </div>
+      
     </div>
 );
 }

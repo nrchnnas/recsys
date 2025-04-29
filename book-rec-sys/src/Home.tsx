@@ -31,7 +31,7 @@ function GenreSection() {
 
     return (
         <div className="main-container">
-            <h3 style={{ fontStyle: "italic", marginTop: "2rem" }}>Search By Genre</h3>
+            <h3 className="genre-grid">Search By Genre</h3>
             <GenreGrid genres={genres} onGenreClick={handleGenreClick} />
         </div>
     );

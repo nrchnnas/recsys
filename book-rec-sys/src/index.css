@@ -41,6 +41,13 @@ h2 {
   text-align: center;
 }
 
+h3 {
+  font-size: 1.8em;
+  margin: 0px;
+  font-weight: normal;
+  font-style: italic;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -69,14 +76,21 @@ button:focus-visible {
 }
 
 .genre-button {
-  padding: 1rem;
-  font-size: 1rem;
+  padding: 1.5rem;                /* Bigger button */
+  font-size: 1.1rem;              /* Larger text */
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  width: 100%;                    /* Full width inside each grid cell */
+  height: 80px;                   /* Same height for all buttons */
+  display: flex;                  /* Center content */
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
+
 
 .genre-button:hover {
   background-color: #f0f0f0;
@@ -90,4 +104,16 @@ button:focus-visible {
 
 .two-column-container > div {
   flex: 1; /* make both divs take equal width */
+}
+
+.genre-grid {
+  position: relative;
+  top: 112px;
+  left: 100px;
+}
+
+.genre-grid h3 {
+  position: relative;
+  top: 112px;
+  left: 100px;
 }
