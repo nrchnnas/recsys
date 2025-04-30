@@ -30,7 +30,10 @@ function GenreSection() {
 
     return (
         <div className="main-container">
-            <h3 className="genre-grid">Search By Genre</h3>
+            {/* Updated to use section-header class */}
+            <div className="section-header">
+                <h3>Search By Genre</h3>
+            </div>
             <GenreGrid genres={genres} onGenreClick={handleGenreClick} />
         </div>
     );

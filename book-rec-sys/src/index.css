@@ -77,6 +77,13 @@ button:focus-visible {
   margin-bottom: 1rem;
 }
 
+.genre-grid-header h3 {
+  color: #0F9F90;
+  font-size: 2em;
+  font-style: normal;
+  font-weight: normal;
+}
+
 .genre-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -119,6 +126,48 @@ button:focus-visible {
 }
 
 .genre-grid-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* Create a consistent header style for all section headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  top: 112px;
+  left: 100px;
+  margin-bottom: 1rem;
+  color: #0F9F90;
+}
+
+.section-header h3 {
+  font-size: 2em;
+  font-style: italic;
+  font-weight: normal;
+  margin: 0;
+}
+
+/* Update your existing style to use the shared properties */
+.genre-grid-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  top: 112px;
+  left: 100px;
+  margin-bottom: 1rem;
+}
+
+/* Style for the back button icon */
+.back-button {
+  background: none;
+  border: none;
+  color: #0F9F90;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
 }

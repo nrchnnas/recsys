@@ -79,32 +79,28 @@ function Web() {
         <div>
           {activeView === 'genre' && (
             <>
-              <h3 className="genre-grid" style={{ fontStyle: 'italic' }}>
-                Search By Genre
-              </h3>
+              {/* Updated to use section-header class */}
+              <div className="section-header">
+                <h3>Search By Genre</h3>
+              </div>
               <GenreGrid genres={genres} onGenreClick={handleGenreClick} />
             </>
           )}
 
           {activeView === 'shelves' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <button
-                onClick={handleBackToGenre}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#0F9F90',
-                  cursor: 'pointer',
-                  padding: 0,
-                  fontSize: '1.5rem',
-                }}
-                className="genre-grid-icon"
-              >
-                <IoIosArrowBack />
-              </button>
-              <h3 className="genre-grid">Your Shelves</h3>
+            <>
+              {/* Updated to use section-header class */}
+              <div className="section-header">
+                <button
+                  onClick={handleBackToGenre}
+                  className="back-button"
+                >
+                  <IoIosArrowBack />
+                </button>
+                <h3>Your Shelves</h3>
+              </div>
               <GenreGrid genres={shelves} onGenreClick={handleShelfClick} />
-            </div>
+            </>
           )}
 
           {activeView === 'book-list' && (

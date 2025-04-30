@@ -59,18 +59,11 @@ const BookList: React.FC<BookListProps> = ({
 }) => {
     return (
         <div>
-            <div className="genre-grid-header">
+            {/* Updated to use section-header class */}
+            <div className="section-header">
                 <button
                     onClick={onBackClick}
-                    style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#0F9F90',
-                        cursor: 'pointer',
-                        padding: 0,
-                        fontSize: '1.5rem',
-                    }}
-                    className="genre-grid-icon"
+                    className="back-button"
                 >
                     <IoIosArrowBack />
                 </button>
