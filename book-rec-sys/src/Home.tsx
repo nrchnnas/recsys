@@ -2,7 +2,7 @@ import { RiBookShelfLine } from "react-icons/ri";
 import { FaBookBookmark } from "react-icons/fa6";
 import { FaPencilAlt } from "react-icons/fa";
 import { useState } from 'react';
-import GenreGrid from './GenreGrid';
+import GenreGrid from './assets/GenreGrid';
 
 const genres = [
     "Children",

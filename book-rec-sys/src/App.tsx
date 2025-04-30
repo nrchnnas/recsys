@@ -1,9 +1,9 @@
 import './App.css';
 import Title, { Panel } from './Home';
-import GenreGrid from './GenreGrid';
-import BookList from './BookList';
-import ShelfDetail from './ShelfDetail';
-import ReviewForm from './ReviewForm'; // Import the new ReviewForm component
+import GenreGrid from './assets/GenreGrid';
+import BookList from './assets/BookList';
+import ShelfDetail from './assets/ShelfDetail';
+import ReviewForm from './assets/ReviewForm'; // Import the new ReviewForm component
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 
