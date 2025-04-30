@@ -91,7 +91,7 @@ button:focus-visible {
 .genre-button {
   padding: 1.5rem;                /* Bigger button */
   font-size: 1.1rem;              /* Larger text */
-  border: 1px solid #ccc;
+  border: 3px solid #CFC9B3;
   background-color: white;
   border-radius: 8px;
   cursor: pointer;

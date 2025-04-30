@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowBack } from "react-icons/io";
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { MdOutlineBookmarkAdd } from "react-icons/md";
 
 type Book = {
     title: string;
@@ -45,7 +45,7 @@ const DefaultBookRenderItem: React.FC<BookRenderProps> = ({ book }) => (
                 cursor: 'pointer'
             }}
         >
-            <FaExternalLinkAlt />
+            <MdOutlineBookmarkAdd />
         </button>
     </div>
 );
