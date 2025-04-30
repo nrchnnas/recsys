@@ -106,7 +106,6 @@ function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
                     </span>
                 </button>
 
-                <button className="panel-button">Add New Current Read</button>
                 <button className="panel-button">Add New Review</button>
                 </div>
 
