@@ -1,5 +1,6 @@
 import { RiBookShelfLine } from "react-icons/ri";
 import { FaBookBookmark } from "react-icons/fa6";
+import { FaPencilAlt } from "react-icons/fa";
 import { useState } from 'react';
 import GenreGrid from './GenreGrid';
 
@@ -106,7 +107,12 @@ function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
                     </span>
                 </button>
 
-                <button className="panel-button">Add New Review</button>
+                <button className="panel-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <FaPencilAlt className="icon" />
+                    Add New Review
+                    </span>
+                </button>
                 </div>
 
             </div>
