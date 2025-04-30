@@ -287,3 +287,73 @@ button:focus-visible {
 .dropdown-menu {
   animation: dropdown-fade 0.2s ease-out;
 }
+
+/* Shelf Detail View Styles */
+.shelf-books-container {
+  position: relative;
+  top: 112px;
+  left: 100px;
+  max-width: 600px;
+  margin-bottom: 24px;
+}
+
+.book-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.book-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.icon-button:hover {
+  color: #0F9F90;
+}
+
+.icon-button.active {
+  color: #0F9F90;
+}
+
+.recommendations-section {
+  position: relative;
+  top: 132px;
+  left: 100px;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+.recommendations-title {
+  color: #0F9F90;
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.recommended-book-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}

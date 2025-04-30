@@ -2,6 +2,7 @@ import './App.css';
 import Title, { Panel } from './Home';
 import GenreGrid from './GenreGrid';
 import BookList from './BookList';
+import ShelfDetail from './ShelfDetail'; // Import our new component
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -13,6 +14,52 @@ const genres = [
 const shelves = [
   "Favorites", "Currently Reading", "Want to Read", "Read Again"
 ];
+
+// Sample data for books in shelves
+const shelfBooks = {
+  "Favorites": [
+    { id: '1', title: "Harry Potter and the Prisoner of Azkaban" },
+    { id: '2', title: "Pride and Prejudice" },
+    { id: '3', title: "The Hunger Games" }
+  ],
+  "Currently Reading": [
+    { id: '4', title: "Lord of the Rings: The Fellowship of the Ring" },
+    { id: '5', title: "Dune" }
+  ],
+  "Want to Read": [
+    { id: '6', title: "Good Omens" },
+    { id: '7', title: "The Shining" },
+    { id: '8', title: "The Hobbit" }
+  ],
+  "Read Again": [
+    { id: '9', title: "To Kill a Mockingbird" },
+    { id: '10', title: "1984" }
+  ]
+};
+
+// Sample recommendations based on shelf
+const recommendations = {
+  "Favorites": [
+    { id: 'r1', title: "Fantastic Beasts and Where to Find Them" },
+    { id: 'r2', title: "Emma" },
+    { id: 'r3', title: "Sunrise on the Reaping" }
+  ],
+  "Currently Reading": [
+    { id: 'r4', title: "The Two Towers" },
+    { id: 'r5', title: "Dune Messiah" },
+    { id: 'r6', title: "Foundation" }
+  ],
+  "Want to Read": [
+    { id: 'r7', title: "American Gods" },
+    { id: 'r8', title: "Doctor Sleep" },
+    { id: 'r9', title: "The Silmarillion" }
+  ],
+  "Read Again": [
+    { id: 'r10', title: "Go Set a Watchman" },
+    { id: 'r11', title: "Animal Farm" },
+    { id: 'r12', title: "Brave New World" }
+  ]
+};
 
 const genreBooks = {
   "Fantasy & Paranormal": [
@@ -54,21 +101,29 @@ const genreBooks = {
 };
 
 function Web() {
-  const [activeView, setActiveView] = useState<'genre' | 'shelves' | 'book-list'>('genre');
+  // Add 'shelf-detail' to the possible view states
+  const [activeView, setActiveView] = useState<'genre' | 'shelves' | 'book-list' | 'shelf-detail'>('genre');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
+  const [selectedShelf, setSelectedShelf] = useState<string>('');
 
   const handleGenreClick = (genre: string) => {
     setSelectedGenre(genre);
     setActiveView('book-list');
   };
 
+  // Updated to navigate to shelf detail view
   const handleShelfClick = (shelf: string) => {
     console.log("Shelf selected:", shelf);
-    setActiveView('shelves');
+    setSelectedShelf(shelf);
+    setActiveView('shelf-detail');
   };
 
   const handleBackToGenre = () => {
     setActiveView('genre');
+  };
+
+  const handleBackToShelves = () => {
+    setActiveView('shelves');
   };
 
   return (
@@ -79,7 +134,6 @@ function Web() {
         <div>
           {activeView === 'genre' && (
             <>
-              {/* Updated to use section-header class */}
               <div className="section-header">
                 <h3>Search By Genre</h3>
               </div>
@@ -89,7 +143,6 @@ function Web() {
 
           {activeView === 'shelves' && (
             <>
-              {/* Updated to use section-header class */}
               <div className="section-header">
                 <button
                   onClick={handleBackToGenre}
@@ -108,6 +161,16 @@ function Web() {
               title={selectedGenre}
               books={genreBooks[selectedGenre as keyof typeof genreBooks] || []} 
               onBackClick={handleBackToGenre} 
+            />
+          )}
+          
+          {/* New ShelfDetail view */}
+          {activeView === 'shelf-detail' && (
+            <ShelfDetail
+              shelfName={selectedShelf}
+              books={shelfBooks[selectedShelf as keyof typeof shelfBooks] || []}
+              recommendedBooks={recommendations[selectedShelf as keyof typeof recommendations] || []}
+              onBackClick={handleBackToShelves}
             />
           )}
         </div>
