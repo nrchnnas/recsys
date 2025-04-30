@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowBack } from "react-icons/io";
-import { MdOutlineBookmarkAdd } from "react-icons/md";
+import BookDropdown from './BookDropdown'; // Import our updated component
 
 type Book = {
     title: string;
@@ -22,6 +22,7 @@ type BookListProps = {
     bookRenderItem?: React.ComponentType<BookRenderProps>;
 };
 
+// Updated book render item with improved layout
 const DefaultBookRenderItem: React.FC<BookRenderProps> = ({ book }) => (
     <div 
         key={book.title}
@@ -33,20 +34,18 @@ const DefaultBookRenderItem: React.FC<BookRenderProps> = ({ book }) => (
             backgroundColor: 'white',
             border: '1px solid #ccc',
             borderRadius: '8px',
-            marginBottom: '0.5rem'
+            marginBottom: '0.5rem',
+            position: 'relative', // Important for proper dropdown positioning
         }}
     >
-        <span>{book.title}</span>
-        <button 
-            style={{
-                background: 'none',
-                border: 'none',
-                color: '#0F9F90',
-                cursor: 'pointer'
-            }}
-        >
-            <MdOutlineBookmarkAdd />
-        </button>
+        <span style={{ 
+            color: '#0F9F90',
+            fontWeight: 500,
+            fontSize: '1.1rem'
+        }}>
+            {book.title}
+        </span>
+        <BookDropdown bookTitle={book.title} />
     </div>
 );
 
@@ -59,7 +58,6 @@ const BookList: React.FC<BookListProps> = ({
 }) => {
     return (
         <div>
-            {/* Updated to use section-header class */}
             <div className="section-header">
                 <button
                     onClick={onBackClick}
@@ -75,7 +73,8 @@ const BookList: React.FC<BookListProps> = ({
                 style={{ 
                     gridTemplateColumns: '1fr', 
                     maxWidth: '100%',
-                    ...customStyle
+                    ...customStyle,
+                    position: 'relative', // Important for proper dropdown positioning
                 }}
             >
                 {books.map((book) => (

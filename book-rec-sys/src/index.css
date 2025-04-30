@@ -171,3 +171,119 @@ button:focus-visible {
   display: flex;
   align-items: center;
 }
+
+/* Book dropdown container */
+.book-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* The dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  right: -10px;
+  top: 45px;
+  width: 220px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+/* Dropdown header */
+.dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  color: #0F9F90;
+  font-weight: bold;
+}
+
+/* Dropdown options container */
+.dropdown-options {
+  padding: 8px 0;
+}
+
+/* Individual dropdown option */
+.dropdown-option {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* Checkbox label */
+.dropdown-option label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Style the checkboxes */
+.dropdown-option input[type="checkbox"] {
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: #0F9F90;
+}
+
+/* Text in dropdown */
+.dropdown-option span {
+  color: #0F9F90;
+}
+
+/* Footer with button */
+.dropdown-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mark Current button */
+.mark-current-button {
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Bookmark button (the toggle) */
+.bookmark-button {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+/* Active bookmark button */
+.bookmark-button.active {
+  color: #0F9F90;
+  border-color: #0F9F90;
+}
+
+/* Animation for dropdown appearance */
+@keyframes dropdown-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu {
+  animation: dropdown-fade 0.2s ease-out;
+}
