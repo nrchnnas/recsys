@@ -1,4 +1,4 @@
-import './App.css';
+import './main.css';
 import Title, { Panel } from './Home';
 import GenreGrid from './assets/GenreGrid';
 import BookList from './assets/BookList';
