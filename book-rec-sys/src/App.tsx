@@ -3,7 +3,9 @@ import Title, { Panel } from './Home';
 import GenreGrid from './assets/GenreGrid';
 import BookList from './assets/BookList';
 import ShelfDetail from './assets/ShelfDetail';
-import ReviewForm from './assets/ReviewForm'; // Import the new ReviewForm component
+import ReviewForm from './assets/ReviewForm';
+import AuthController from './assets/AuthController';
+import { AuthProvider, useAuth } from './assets/AuthContext';
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -101,11 +103,12 @@ const genreBooks = {
   ]
 };
 
-function Web() {
-  // Add 'new-review' to the possible view states
+// The main app component that gets shown when authenticated
+const BookApp = () => {
   const [activeView, setActiveView] = useState<'genre' | 'shelves' | 'book-list' | 'shelf-detail' | 'new-review'>('genre');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
   const [selectedShelf, setSelectedShelf] = useState<string>('');
+  const { logout, user } = useAuth();
 
   const handleGenreClick = (genre: string) => {
     setSelectedGenre(genre);
@@ -126,16 +129,39 @@ function Web() {
     setActiveView('shelves');
   };
 
-  // Handler for submitting a new review
   const handleReviewSubmit = (reviewData: any) => {
     console.log("Review submitted:", reviewData);
-    // Here you would typically store the review data
-    // For now, just go back to the genre view
     setActiveView('genre');
   };
 
   return (
     <div>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'flex-end', 
+        alignItems: 'center',
+        padding: '1rem' 
+      }}>
+        {user && (
+          <span style={{ marginRight: '1rem', color: '#0F9F90' }}>
+            Welcome, {user.username}!
+          </span>
+        )}
+        <button 
+          onClick={logout}
+          style={{
+            backgroundColor: 'white',
+            color: '#0F9F90',
+            border: '1px solid #0F9F90',
+            borderRadius: '5px',
+            padding: '0.5rem 1rem',
+            cursor: 'pointer'
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
       <Title />
 
       <div className="two-column-container">
@@ -181,7 +207,6 @@ function Web() {
             />
           )}
 
-          {/* New Review Form */}
           {activeView === 'new-review' && (
             <ReviewForm 
               onBackClick={handleBackToGenre}
@@ -193,12 +218,32 @@ function Web() {
         <div>
           <Panel 
             onViewShelvesClick={() => setActiveView('shelves')} 
-            onAddNewReviewClick={() => setActiveView('new-review')} // Add handler for the review button
+            onAddNewReviewClick={() => setActiveView('new-review')} 
           />
         </div>
       </div>
     </div>
   );
+};
+
+// Main app component with auth integration
+function App() {
+  return (
+    <AuthProvider>
+      <AppWithAuth />
+    </AuthProvider>
+  );
 }
 
-export default Web;
+// Component that conditionally renders auth controller or main app
+const AppWithAuth = () => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <AuthController onAuthSuccess={() => console.log('Authentication successful')} />;
+  }
+  
+  return <BookApp />;
+};
+
+export default App;

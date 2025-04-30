@@ -23,10 +23,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onBackClick, onSubmit }) => {
 
   // Available shelves - you can customize this or make it dynamic
   const shelves = [
-    { id: 'want-to-read', label: 'Want to Read' },
     { id: 'favorites', label: 'Favorites' },
-    { id: 'read', label: 'Read' },
-    { id: 'greek-mythology', label: 'Greek Mythology' }
+      { id: 'currently-reading', label: 'Currently Reading' },
+      { id: 'want-to-read', label: 'Want to Read' },
+      { id: 'read-again', label: 'Read Again' }
   ];
 
   const handleRatingClick = (selectedRating: number) => {

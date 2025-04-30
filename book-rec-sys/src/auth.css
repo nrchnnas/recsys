@@ -1,0 +1,195 @@
+/* Custom styles for authentication components */
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .auth-title {
+    color: #0F9F90;
+    font-size: 3.2em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  
+  .auth-subtitle {
+    color: #0F9F90;
+    font-size: 1.8em;
+    font-weight: normal;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+  
+  .auth-form-title {
+    color: #0F9F90;
+    font-size: 1.8em;
+    font-weight: normal;
+    font-style: italic;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .auth-form {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: #333;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  .auth-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .primary-button {
+    background-color: #0F9F90;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .secondary-button {
+    background-color: transparent;
+    color: #0F9F90;
+    border: 1px solid #0F9F90;
+    border-radius: 5px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Genres section in signup */
+  .genres-section {
+    margin-bottom: 2rem;
+  }
+  
+  .genres-section h3 {
+    color: #0F9F90;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+  }
+  
+  .genres-section p {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .genres-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .genre-button {
+    padding: 1rem;
+    border: 1px solid #CFC9B3;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    text-align: center;
+    font-weight: normal;
+  }
+  
+  .genre-button.selected {
+    border-color: #0F9F90;
+    background-color: #0F9F90;
+    color: white;
+  }
+  
+  /* Books section in signup */
+  .books-section {
+    margin-bottom: 2rem;
+  }
+  
+  .books-section h3 {
+    color: #0F9F90;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+  }
+  
+  .books-section p {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .book-input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .book-input {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .star-rating {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #0F9F90;
+  }
+  
+  .book-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .book-remove-button {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0 0.5rem;
+  }
