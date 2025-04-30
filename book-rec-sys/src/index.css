@@ -67,12 +67,25 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.genre-grid-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  top: 112px;
+  left: 100px;
+  margin-bottom: 1rem;
+}
+
 .genre-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
   max-width: 600px;
+  position: relative;
+  top: 112px;
+  left: 100px;
 }
 
 .genre-button {
@@ -91,7 +104,6 @@ button:focus-visible {
   box-sizing: border-box;
 }
 
-
 .genre-button:hover {
   background-color: #0F9F90;
 }
@@ -106,20 +118,7 @@ button:focus-visible {
   flex: 1; /* make both divs take equal width */
 }
 
-.genre-grid {
-  position: relative;
-  top: 112px;
-  left: 100px;
-}
-
-.genre-grid h3 {
-  position: relative;
-  top: 112px;
-  left: 100px;
-}
-
 .genre-grid-icon {
-  position: relative;
-  top: 122px;
-  left: 100px;
+  display: flex;
+  align-items: center;
 }
