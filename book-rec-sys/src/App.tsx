@@ -147,16 +147,12 @@ const BookApp = () => {
             Welcome, {user.username}!
           </span>
         )}
-        <button 
+        
+        <button
+          type="button"
           onClick={logout}
-          style={{
-            backgroundColor: 'white',
-            color: '#0F9F90',
-            border: '1px solid #0F9F90',
-            borderRadius: '5px',
-            padding: '0.5rem 1rem',
-            cursor: 'pointer'
-          }}
+          className="btn-secondary"
+          style={{ padding: '10px' }}
         >
           Logout
         </button>

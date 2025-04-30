@@ -39,31 +39,11 @@ const ShelfDetail: React.FC<ShelfDetailProps> = ({
           <div 
             key={book.id} 
             className="book-item"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '16px',
-              backgroundColor: 'white',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              marginBottom: '12px',
-              color: '#0F9F90'
-            }}
           >
             <span style={{ fontWeight: '500' }}>{book.title}</span>
             <div className="book-actions" style={{ display: 'flex', gap: '8px' }}>
               <button 
                 className="icon-button"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: '8px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
               >
               </button>
               <BookDropdown bookTitle={book.title} />
@@ -83,17 +63,6 @@ const ShelfDetail: React.FC<ShelfDetailProps> = ({
           <div 
             key={book.id}
             className="recommended-book-item"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '16px',
-              backgroundColor: 'white',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              marginBottom: '12px',
-              color: '#0F9F90'
-            }}
           >
             <span style={{ fontWeight: '500' }}>{book.title}</span>
             <BookDropdown bookTitle={book.title} />

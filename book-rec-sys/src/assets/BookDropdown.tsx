@@ -70,19 +70,6 @@ const BookDropdown: React.FC<BookDropdownProps> = ({ bookTitle }) => {
       <button 
         onClick={toggleDropdown}
         className="bookmark-button"
-        style={{
-          background: 'none',
-          border: '1px solid #ddd',
-          borderRadius: '4px',
-          color: isAddedToAnyShelf ? '#0F9F90' : '#888',
-          cursor: 'pointer',
-          padding: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '40px',
-          height: '40px'
-        }}
         title="Add to shelf"
       >
         {isAddedToAnyShelf ? <MdBookmarkAdded size={24} /> : <MdOutlineBookmarkAdd size={24} />}
@@ -91,27 +78,9 @@ const BookDropdown: React.FC<BookDropdownProps> = ({ bookTitle }) => {
       {isOpen && (
         <div 
           className="dropdown-menu" 
-          style={{
-            position: 'absolute',
-            right: '-10px',
-            top: '45px',
-            width: '220px',
-            backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-            zIndex: 100,
-            overflow: 'hidden'
-          }}
         >
           <div 
             className="dropdown-header" 
-            style={{
-              padding: '12px 16px',
-              borderBottom: '1px solid #eee',
-              color: '#0F9F90',
-              fontWeight: 'bold'
-            }}
           >
             Add to Shelf
           </div>
@@ -153,12 +122,6 @@ const BookDropdown: React.FC<BookDropdownProps> = ({ bookTitle }) => {
           
           <div 
             className="dropdown-footer"
-            style={{
-              padding: '12px 16px',
-              borderTop: '1px solid #eee',
-              display: 'flex',
-              justifyContent: 'center'
-            }}
           >
           </div>
         </div>

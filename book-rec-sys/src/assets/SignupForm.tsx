@@ -287,37 +287,19 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
           </div>
           
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-            <button
-              type="button"
-              onClick={onBackToLogin}
-              style={{
-                backgroundColor: 'white',
-                color: '#0F9F90',
-                border: '1px solid #0F9F90',
-                borderRadius: '5px',
-                padding: '0.75rem 2rem',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
+          <button
+            type="button"
+            onClick={onBackToLogin}
+            className="btn-secondary"
             >
-              Back to Login
+            Back to Login
             </button>
             
             <button
-              type="submit"
-              style={{
-                backgroundColor: '#0F9F90',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                padding: '0.75rem 2rem',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
+            type="submit"
+            className="btn-primary"
             >
-              Next
+            Next
             </button>
           </div>
         </form>
@@ -444,39 +426,20 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
             </div>
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
             <button
-              type="button"
-              onClick={() => setStep(1)}
-              style={{
-                backgroundColor: 'white',
-                color: '#0F9F90',
-                border: '1px solid #0F9F90',
-                borderRadius: '5px',
-                padding: '0.75rem 2rem',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                marginRight: '1rem'
-              }}
-            >
-              Back
+                type="button"
+                onClick={() => setStep(1)}
+                className="btn-secondary"
+                >
+                Back
             </button>
             
             <button
-              type="submit"
-              style={{
-                backgroundColor: '#0F9F90',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                padding: '0.75rem 2rem',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
-            >
-              Submit
+                type="submit"
+                className="btn-primary"
+                >
+                Submit
             </button>
           </div>
         </form>

@@ -143,22 +143,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onCreateAccount, onLogin }) => {
             Login
           </button>
           
-          <button
-            type="button"
-            onClick={onCreateAccount}
-            style={{
-              backgroundColor: 'white',
-              color: '#0F9F90',
-              border: '1px solid #0F9F90',
-              borderRadius: '5px',
-              padding: '0.75rem 2rem',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Create Account
-          </button>
+            <button
+                type="button"
+                onClick={onCreateAccount}
+                className="btn-secondary"
+                >
+                Create Account
+            </button>
         </div>
       </form>
     </div>

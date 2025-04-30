@@ -22,7 +22,6 @@ type BookListProps = {
     bookRenderItem?: React.ComponentType<BookRenderProps>;
 };
 
-// Updated book render item with improved layout
 const DefaultBookRenderItem: React.FC<BookRenderProps> = ({ book }) => (
     <div 
         key={book.title}
@@ -35,7 +34,7 @@ const DefaultBookRenderItem: React.FC<BookRenderProps> = ({ book }) => (
             border: '1px solid #ccc',
             borderRadius: '8px',
             marginBottom: '0.5rem',
-            position: 'relative', // Important for proper dropdown positioning
+            position: 'relative', 
         }}
     >
         <span style={{ 

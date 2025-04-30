@@ -24,5 +24,4 @@ npm run dev
 
 ## styles
 
-- index.css: global styles
-- App.css: component-specific styles
+- main.css: global styles
