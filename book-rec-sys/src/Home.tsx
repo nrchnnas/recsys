@@ -31,7 +31,6 @@ function GenreSection() {
 
     return (
         <div className="main-container">
-            {/* Updated to use section-header class */}
             <div className="section-header">
                 <h3>Search By Genre</h3>
             </div>
@@ -40,7 +39,13 @@ function GenreSection() {
     );
 }
 
-function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
+// Updated Panel component with onAddNewReviewClick prop
+interface PanelProps {
+    onViewShelvesClick: () => void;
+    onAddNewReviewClick?: () => void;
+}
+
+function Panel({ onViewShelvesClick, onAddNewReviewClick }: PanelProps) {
     const [isChecked, setIsChecked] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [bookTitle, setBookTitle] = useState('');
@@ -107,16 +112,17 @@ function Panel({ onViewShelvesClick }: { onViewShelvesClick: () => void }) {
                     </span>
                 </button>
 
-                <button className="panel-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button 
+                className="panel-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                onClick={onAddNewReviewClick}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <FaPencilAlt className="icon" />
                     Add New Review
                     </span>
                 </button>
-                </div>
-
             </div>
         </div>
+    </div>
     );
 }
 

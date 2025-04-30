@@ -2,7 +2,8 @@ import './App.css';
 import Title, { Panel } from './Home';
 import GenreGrid from './GenreGrid';
 import BookList from './BookList';
-import ShelfDetail from './ShelfDetail'; // Import our new component
+import ShelfDetail from './ShelfDetail';
+import ReviewForm from './ReviewForm'; // Import the new ReviewForm component
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -101,8 +102,8 @@ const genreBooks = {
 };
 
 function Web() {
-  // Add 'shelf-detail' to the possible view states
-  const [activeView, setActiveView] = useState<'genre' | 'shelves' | 'book-list' | 'shelf-detail'>('genre');
+  // Add 'new-review' to the possible view states
+  const [activeView, setActiveView] = useState<'genre' | 'shelves' | 'book-list' | 'shelf-detail' | 'new-review'>('genre');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
   const [selectedShelf, setSelectedShelf] = useState<string>('');
 
@@ -111,7 +112,6 @@ function Web() {
     setActiveView('book-list');
   };
 
-  // Updated to navigate to shelf detail view
   const handleShelfClick = (shelf: string) => {
     console.log("Shelf selected:", shelf);
     setSelectedShelf(shelf);
@@ -124,6 +124,14 @@ function Web() {
 
   const handleBackToShelves = () => {
     setActiveView('shelves');
+  };
+
+  // Handler for submitting a new review
+  const handleReviewSubmit = (reviewData: any) => {
+    console.log("Review submitted:", reviewData);
+    // Here you would typically store the review data
+    // For now, just go back to the genre view
+    setActiveView('genre');
   };
 
   return (
@@ -164,7 +172,6 @@ function Web() {
             />
           )}
           
-          {/* New ShelfDetail view */}
           {activeView === 'shelf-detail' && (
             <ShelfDetail
               shelfName={selectedShelf}
@@ -173,10 +180,21 @@ function Web() {
               onBackClick={handleBackToShelves}
             />
           )}
+
+          {/* New Review Form */}
+          {activeView === 'new-review' && (
+            <ReviewForm 
+              onBackClick={handleBackToGenre}
+              onSubmit={handleReviewSubmit}
+            />
+          )}
         </div>
 
         <div>
-          <Panel onViewShelvesClick={() => setActiveView('shelves')} />
+          <Panel 
+            onViewShelvesClick={() => setActiveView('shelves')} 
+            onAddNewReviewClick={() => setActiveView('new-review')} // Add handler for the review button
+          />
         </div>
       </div>
     </div>
