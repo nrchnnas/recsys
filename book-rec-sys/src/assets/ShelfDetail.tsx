@@ -42,10 +42,7 @@ const ShelfDetail: React.FC<ShelfDetailProps> = ({
           >
             <span style={{ fontWeight: '500' }}>{book.title}</span>
             <div className="book-actions" style={{ display: 'flex', gap: '8px' }}>
-              <button 
-                className="icon-button"
-              >
-              </button>
+              
               <BookDropdown bookTitle={book.title} />
             </div>
           </div>
