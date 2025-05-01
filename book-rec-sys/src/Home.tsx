@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-function Title() {
-    return <h1>What Should I Read Next?</h1>;
-}
-
-export default Title;
-=======
 import { RiBookShelfLine } from "react-icons/ri";
 import { FaBookBookmark } from "react-icons/fa6";
 import { FaPencilAlt } from "react-icons/fa";
@@ -135,4 +128,3 @@ function Panel({ onViewShelvesClick, onAddNewReviewClick }: PanelProps) {
 
 export default Title;
 export { Panel, GenreSection };
->>>>>>> 43bd580560cd432f7f9cf0dbcd6dc15cedbf3830

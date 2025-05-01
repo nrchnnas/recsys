@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import Title from './book-rec-sys/src/Home';
-
-// Define component
-function Web() {
-  return <div><Title /></div>;
-}
-
-// Export the component itself, not the result of calling it
-export default Web;
-=======
 import './main.css';
 import Title, { Panel } from './Home';
 import GenreGrid from './assets/GenreGrid';
@@ -254,4 +243,3 @@ const AppWithAuth = () => {
 };
 
 export default App;
->>>>>>> 43bd580560cd432f7f9cf0dbcd6dc15cedbf3830
