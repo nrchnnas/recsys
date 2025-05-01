@@ -1,8 +1,8 @@
 # run using
 
-```
-npm run dev
-```
+1. open your terminal
+2. make sure your directory is `recsys/book-rec-sys`
+3. run `npm install` or `npm run dev`
 
 # file structure record
 
