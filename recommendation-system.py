@@ -15,7 +15,7 @@ class BalancedBookRecommender:
     2. Vector embedding (lower dimension for speed)
     3. Genre matching (lowest weight)
     
-    With optimizations for performance
+    With optimizations for performance and fixes for pandas warnings
     """
     
     def __init__(self, db_path="books.db"):
@@ -27,7 +27,7 @@ class BalancedBookRecommender:
         self.text_matrix = None
         
         # Vector embedding settings
-        self.vector_max_features = 2000  # Reduced from 5000 to 1000
+        self.vector_max_features = 2000  # Reduced from 5000 to 2000
         self.vector_min_df = 5           # More aggressive filtering (from 2 to 5)
         self.vector_max_df = 0.5         # More aggressive filtering (from 0.85 to 0.5)
         
@@ -277,13 +277,13 @@ class BalancedBookRecommender:
             return title_similar and authors_match
         
         # Create filtered dataframe excluding the source book and likely duplicates
+        # Use .copy() to avoid SettingWithCopyWarning
         filtered_df = self.df[
             (self.df['book_id'] != book['book_id']) & 
             (~self.df.apply(is_likely_duplicate, axis=1))
-        ]
+        ].copy()
         
         # 1. Score: Similar books (highest weight)
-        filtered_df['similar_books_score'] = 0.0
         if "similar_books_list" in self.df.columns and len(book.get("similar_books_list", [])) > 0:
             similar_ids = book["similar_books_list"]
             normalized_similar_ids = [self._normalize_book_id(id) for id in similar_ids]
@@ -300,6 +300,7 @@ class BalancedBookRecommender:
             print(f"Found {int(similar_books_count)} similar books in our database")
         else:
             print("No similar books data available")
+            filtered_df['similar_books_score'] = 0.0
         
         # 2. Score: Vector embedding similarity
         print("Calculating content similarity...")
@@ -339,7 +340,7 @@ class BalancedBookRecommender:
         )
         
         # Sort by final score and get top recommendations
-        recommendations = filtered_df.sort_values('final_score', ascending=False).head(num_recommendations)
+        recommendations = filtered_df.sort_values('final_score', ascending=False).head(num_recommendations).copy()
         
         # Add explanation of why books were recommended
         def get_recommendation_reason(row):
@@ -417,7 +418,7 @@ class BalancedBookRecommender:
             return pd.DataFrame()
         
         # Combine all recommendations
-        combined_recommendations = pd.concat(all_recommendations)
+        combined_recommendations = pd.concat(all_recommendations).copy()
         
         # Remove books the user already likes
         user_book_ids = [book['book_id'] for book in user_books]
@@ -489,12 +490,6 @@ if __name__ == "__main__":
     recommendations = recommender.get_recommendations(title=book_title)
     recommender.print_recommendations(recommendations)
     
-    # Get recommendations based on multiple books
-    print("\n--- RECOMMENDATIONS BASED ON MULTIPLE BOOKS ---")
-    liked_books = ["Harry Potter", "Dune", "The Hobbit"]
-    print(f"Books you liked: {', '.join(liked_books)}")
-    recommendations = recommender.recommend_for_user(liked_books)
-    recommender.print_recommendations(recommendations)
     
     # Clean up
     recommender.close()
