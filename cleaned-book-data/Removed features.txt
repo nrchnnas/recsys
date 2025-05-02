@@ -1,2 +1,0 @@
-isbn, text_reviews_count, country_code, language_code, popular_shelves, asin, is_ebook, kindle_asin, format, link, publisher,
- publication_day, isbn13, publication_month, edition_information, publication_year, url, image_url, work_id

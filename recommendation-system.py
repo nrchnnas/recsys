@@ -8,14 +8,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import time
 
-class BalancedBookRecommender:
+class DescriptionOnlyRecommender:
     """
-    A balanced book recommendation system that prioritizes:
+    A book recommendation system that prioritizes:
     1. Similar books data (highest weight)
-    2. Vector embedding (lower dimension for speed)
+    2. Vector embedding of DESCRIPTION ONLY (medium weight)
     3. Genre matching (lowest weight)
     
-    With optimizations for performance and fixes for pandas warnings
+    With support for multiple book title input and performance optimizations
     """
     
     def __init__(self, db_path="books.db"):
@@ -27,7 +27,7 @@ class BalancedBookRecommender:
         self.text_matrix = None
         
         # Vector embedding settings
-        self.vector_max_features = 2000  # Reduced from 5000 to 2000
+        self.vector_max_features = 5000  # Reduced from 5000 to 2000
         self.vector_min_df = 5           # More aggressive filtering (from 2 to 5)
         self.vector_max_df = 0.5         # More aggressive filtering (from 0.85 to 0.5)
         
@@ -91,9 +91,9 @@ class BalancedBookRecommender:
                 # Create basic ID mappings for similar books matching
                 self._create_basic_id_mappings()
             
-            # Create combined text field for vector embedding
-            print("Preparing text data for vectorization...")
-            self.df['combined_text'] = self.df['title_without_series'].fillna('') + ' ' + self.df['description'].fillna('')
+            # Clean and prepare description field for vector embedding
+            print("Preparing description data for vectorization...")
+            self.df['clean_description'] = self.df['description'].fillna('')
             
             # Add basic "is_duplicate" flag for later filtering
             self.df['is_duplicate'] = False
@@ -122,18 +122,27 @@ class BalancedBookRecommender:
                 pass
     
     def prepare_vector_embeddings(self):
-        """Create TF-IDF vector embeddings with reduced dimensionality."""
+        """Create TF-IDF vector embeddings using only description field."""
         if self.df is None:
             if not self.load_data():
                 return False
         
-        print(f"Creating vector embeddings (max_features={self.vector_max_features})...")
+        print(f"Creating vector embeddings from descriptions (max_features={self.vector_max_features})...")
         start_time = time.time()
         
+        # Remove books with empty descriptions for vectorization
+        descriptions = self.df['clean_description']
+        valid_descriptions = descriptions[descriptions != '']
+        
+        print(f"Found {len(valid_descriptions)} books with valid descriptions")
+        
         # Sample texts for faster fitting (optional)
-        sample_size = min(20000, len(self.df))  # Limit to 20,000 books for vocab building
-        sample_indices = np.random.choice(len(self.df), size=sample_size, replace=False)
-        sample_texts = self.df.iloc[sample_indices]['combined_text']
+        sample_size = min(20000, len(valid_descriptions))
+        if len(valid_descriptions) > sample_size:
+            sample_indices = np.random.choice(valid_descriptions.index, size=sample_size, replace=False)
+            sample_texts = valid_descriptions.loc[sample_indices]
+        else:
+            sample_texts = valid_descriptions
         
         # Create the TF-IDF vectorizer with reduced dimensions
         self.text_vectorizer = TfidfVectorizer(
@@ -144,11 +153,11 @@ class BalancedBookRecommender:
         )
         
         # Fit on sample, transform all
-        print("Fitting vectorizer on text sample...")
+        print("Fitting vectorizer on description sample...")
         self.text_vectorizer.fit(sample_texts)
         
-        print("Transforming all book texts to vectors...")
-        self.text_matrix = self.text_vectorizer.transform(self.df['combined_text'])
+        print("Transforming all book descriptions to vectors...")
+        self.text_matrix = self.text_vectorizer.transform(self.df['clean_description'])
         
         vectorize_time = time.time() - start_time
         print(f"Created vector embeddings with shape: {self.text_matrix.shape} in {vectorize_time:.2f} seconds")
@@ -223,11 +232,25 @@ class BalancedBookRecommender:
         # Return the most popular match
         return matches.sort_values("ratings_count", ascending=False).iloc[0]
     
+    def find_books(self, titles):
+        """Find multiple books by their titles."""
+        found_books = []
+        not_found = []
+        
+        for title in titles:
+            book = self.find_book(title=title)
+            if book is not None:
+                found_books.append(book)
+            else:
+                not_found.append(title)
+        
+        return found_books, not_found
+    
     def get_recommendations(self, book_id=None, title=None, num_recommendations=10):
         """
         Get book recommendations based on a given book, prioritizing:
         1. Similar books data (highest weight)
-        2. Vector embedding similarity (medium weight)
+        2. Vector embedding similarity of description (medium weight)
         3. Genre matching (lowest weight)
         """
         if self.df is None:
@@ -302,20 +325,26 @@ class BalancedBookRecommender:
             print("No similar books data available")
             filtered_df['similar_books_score'] = 0.0
         
-        # 2. Score: Vector embedding similarity
-        print("Calculating content similarity...")
+        # 2. Score: Vector embedding similarity (based on description only)
+        print("Calculating description similarity...")
         # Get the index of the source book
         book_idx = self.df[self.df['book_id'] == book['book_id']].index[0]
-        # Calculate cosine similarity between the source book and all other books
-        book_vector = self.text_matrix[book_idx]
         
-        # Only calculate for filtered books to save time
-        filtered_indices = filtered_df.index.tolist()
-        filtered_matrix = self.text_matrix[filtered_indices]
-        similarities = cosine_similarity(book_vector, filtered_matrix).flatten()
-        
-        # Assign similarity scores directly to the filtered dataframe
-        filtered_df['vector_score'] = similarities
+        # Only calculate similarity if source book has a description
+        if book['clean_description']:
+            # Calculate cosine similarity between the source book and all other books
+            book_vector = self.text_matrix[book_idx]
+            
+            # Only calculate for filtered books to save time
+            filtered_indices = filtered_df.index.tolist()
+            filtered_matrix = self.text_matrix[filtered_indices]
+            similarities = cosine_similarity(book_vector, filtered_matrix).flatten()
+            
+            # Assign similarity scores directly to the filtered dataframe
+            filtered_df['vector_score'] = similarities
+        else:
+            print("Source book has no description, skipping description similarity")
+            filtered_df['vector_score'] = 0.0
         
         # 3. Score: Genre matching
         print("Calculating genre similarity...")
@@ -352,7 +381,7 @@ class BalancedBookRecommender:
             
             # Content similarity
             if row['vector_score'] > 0.2:  # Threshold for significant similarity
-                reasons.append("Similar content")
+                reasons.append("Similar description")
             
             # Genre match
             if row['genre_score'] > 0:
@@ -370,47 +399,46 @@ class BalancedBookRecommender:
             return "; ".join(reasons)
         
         recommendations['recommendation_reason'] = recommendations.apply(get_recommendation_reason, axis=1)
+        recommendations['source_book'] = book['title_without_series']  # Add source book info
         
         total_time = time.time() - start_time
         print(f"Generated recommendations in {total_time:.2f} seconds")
         
         return recommendations
     
-    def recommend_for_user(self, liked_books, num_recommendations=10):
-        """Recommend books based on a list of books a user liked."""
-        if self.df is None:
-            if not self.load_data():
-                return pd.DataFrame()
+    def recommend_from_multiple_titles(self, titles, num_recommendations=10):
+        """
+        Generate book recommendations based on multiple input book titles.
         
-        # Make sure we have vector embeddings
-        if self.text_matrix is None:
-            if not self.prepare_vector_embeddings():
-                return pd.DataFrame()
+        Args:
+            titles: List of book titles
+            num_recommendations: Number of recommendations to return
+            
+        Returns:
+            DataFrame containing recommendations
+        """
+        if not titles:
+            print("No titles provided")
+            return pd.DataFrame()
+            
+        # Find the books
+        found_books, not_found = self.find_books(titles)
         
-        # Find all books the user likes
-        user_books = []
-        for book in liked_books:
-            if isinstance(book, str):
-                # Assume it's a title
-                found_book = self.find_book(title=book)
-                if found_book is not None:
-                    user_books.append(found_book)
-            else:
-                # Assume it's a book_id
-                found_book = self.find_book(book_id=book)
-                if found_book is not None:
-                    user_books.append(found_book)
-        
-        if not user_books:
-            print("None of the provided books were found")
+        if not found_books:
+            print("None of the provided titles were found")
             return pd.DataFrame()
         
-        print(f"Found {len(user_books)} of your liked books")
+        print(f"Found {len(found_books)} of {len(titles)} provided titles")
+        if not_found:
+            print(f"Titles not found: {', '.join(not_found)}")
         
-        # Get recommendations for each book
+        # Get individual recommendations for each book
         all_recommendations = []
-        for book in user_books:
-            book_recs = self.get_recommendations(book_id=book['book_id'], num_recommendations=5)
+        for book in found_books:
+            print(f"\nProcessing recommendations for: {book['title_without_series']}")
+            # Get fewer recommendations per book when there are multiple inputs
+            per_book_recs = max(3, int(num_recommendations / len(found_books)))
+            book_recs = self.get_recommendations(book_id=book['book_id'], num_recommendations=per_book_recs)
             if len(book_recs) > 0:
                 all_recommendations.append(book_recs)
         
@@ -420,21 +448,34 @@ class BalancedBookRecommender:
         # Combine all recommendations
         combined_recommendations = pd.concat(all_recommendations).copy()
         
-        # Remove books the user already likes
-        user_book_ids = [book['book_id'] for book in user_books]
-        combined_recommendations = combined_recommendations[~combined_recommendations['book_id'].isin(user_book_ids)]
+        # Remove input books from recommendations
+        input_book_ids = [book['book_id'] for book in found_books]
+        combined_recommendations = combined_recommendations[~combined_recommendations['book_id'].isin(input_book_ids)]
         
-        # Remove duplicates and count frequency
+        # Remove duplicates and count frequency (how many source books recommended each book)
         combined_recommendations = combined_recommendations.drop_duplicates(subset=['book_id'])
-        
-        # Count how many source books recommended each book
         book_counts = Counter(combined_recommendations['book_id'])
         combined_recommendations['frequency'] = combined_recommendations['book_id'].apply(lambda x: book_counts[x])
         
-        # Sort by frequency and then by average score
+        # Sort by frequency (most important) and then by average score
         result = combined_recommendations.sort_values(['frequency', 'final_score'], ascending=[False, False])
         
         return result.head(num_recommendations)
+
+    def recommend_from_comma_separated_titles(self, comma_separated_titles, num_recommendations=10):
+        """
+        Convenience method to accept a comma-separated string of titles.
+        
+        Args:
+            comma_separated_titles: String containing titles separated by commas
+            num_recommendations: Number of recommendations to return
+            
+        Returns:
+            DataFrame containing recommendations
+        """
+        # Split the string and clean up the titles
+        titles = [title.strip() for title in comma_separated_titles.split(',') if title.strip()]
+        return self.recommend_from_multiple_titles(titles, num_recommendations)
     
     def print_recommendations(self, recommendations):
         """Print recommendations in a readable format."""
@@ -443,6 +484,12 @@ class BalancedBookRecommender:
             return
         
         print("\n=== Book Recommendations ===\n")
+        
+        # Group by source book if that information is available
+        if 'source_book' in recommendations.columns:
+            source_books = set(recommendations['source_book'])
+            if len(source_books) > 1:
+                print(f"Based on {len(source_books)} input books: {', '.join(source_books)}\n")
         
         for i, (_, book) in enumerate(recommendations.iterrows(), 1):
             print(f"{i}. {book['title_without_series']}")
@@ -453,12 +500,16 @@ class BalancedBookRecommender:
             if 'similar_books_score' in book:
                 print(f"   Similar books score: {book['similar_books_score']:.2f}")
             if 'vector_score' in book:
-                print(f"   Content similarity: {book['vector_score']:.2f}")
+                print(f"   Description similarity: {book['vector_score']:.2f}")
             if 'genre_score' in book:
                 print(f"   Genre match: {book['genre_score']:.2f}")
             if 'final_score' in book:
                 print(f"   Overall score: {book['final_score']:.2f}")
             
+            # Print source book if available
+            if 'source_book' in book and len(set(recommendations['source_book'])) > 1:
+                print(f"   Recommended from: {book['source_book']}")
+                
             # Print recommendation reason
             if 'recommendation_reason' in book:
                 print(f"   Why: {book['recommendation_reason']}")
@@ -478,18 +529,28 @@ class BalancedBookRecommender:
 # Example usage
 if __name__ == "__main__":
     # Create recommender
-    recommender = BalancedBookRecommender("books.db")
+    recommender = DescriptionOnlyRecommender("books.db")
     
-    # Load data and prepare vectors (with fewer dimensions)
+    # Load data and prepare vectors
     recommender.load_data()
     recommender.prepare_vector_embeddings()
     
-    # Get recommendations for a specific book
-    print("\n--- RECOMMENDATIONS BASED ON A BOOK ---")
-    book_title = input("Enter a book title to get recommendations: ")
-    recommendations = recommender.get_recommendations(title=book_title)
-    recommender.print_recommendations(recommendations)
+    # Get recommendations based on input method
+    print("\n--- BOOK RECOMMENDATIONS ---")
+    print("Choose input method:")
+    print("1. Single book title")
+    print("2. Multiple book titles (comma-separated)")
     
+    choice = input("Enter your choice (1 or 2): ")
+    
+    if choice == "1":
+        book_title = input("Enter a book title: ")
+        recommendations = recommender.get_recommendations(title=book_title)
+    else:
+        titles_input = input("Enter book titles, separated by commas: ")
+        recommendations = recommender.recommend_from_comma_separated_titles(titles_input)
+    
+    recommender.print_recommendations(recommendations)
     
     # Clean up
     recommender.close()
