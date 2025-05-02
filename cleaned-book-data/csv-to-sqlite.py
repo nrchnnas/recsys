@@ -197,7 +197,7 @@ def csv_to_sqlite(csv_file, db_file, table_name='books', sample_size=1000):
 
 if __name__ == "__main__":
     # Change these variables as needed
-    input_file = "all_books_combined_100k.csv"  # Your CSV file
+    input_file = "all_books_combined_50k.csv"  # Your CSV file
     output_db = "books.db"  # SQLite database to create
     table_name = "books"  # Table name to create
     

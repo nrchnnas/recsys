@@ -2,7 +2,7 @@ import csv
 import os
 from tqdm import tqdm  # For progress bar (optional, remove if not installed)
 
-def cut_rows_from_csv(input_csv, output_csv, rows_to_keep=100000):  # Changed to 200000
+def cut_rows_from_csv(input_csv, output_csv, rows_to_keep):  # Changed to 200000
     """
     Extract the first N rows from a CSV file.
     
@@ -60,11 +60,11 @@ def cut_rows_from_csv(input_csv, output_csv, rows_to_keep=100000):  # Changed to
         print(f"Error: {e}")
 
 if __name__ == "__main__":
-    input_file = "all_books_combined.csv"
-    output_file = "all_books_combined_200k.csv"  # Changed filename to reflect 200k
+    input_file = "all_books_combined_100k.csv"
+    output_file = "all_books_combined_50k.csv"  # Changed filename to reflect 200k
     
     # Check if input file exists
     if not os.path.exists(input_file):
         print(f"Error: Input file '{input_file}' not found.")
     else:
-        cut_rows_from_csv(input_file, output_file, 100000)  # Changed to 200000
+        cut_rows_from_csv(input_file, output_file, 50000)  # Changed to 200000
