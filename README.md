@@ -8,7 +8,7 @@
 3. run `npm install` or `npm run dev`
 ## other things of note
 ### how to run eda.ipynb
-1. download `books.db` at [this link]([url](https://drive.google.com/file/d/1TKkd19sg1nJm3Cgyfc3V0vH4Cj_MY3sD/view?usp=sharing)****)
+1. download `books.db` at [this link](https://drive.google.com/file/d/1TKkd19sg1nJm3Cgyfc3V0vH4Cj_MY3sD/view?usp=sharing)
 2. make sure that root directory is `recsys`
 3. create new folder called `data`
 4. add `books.db` into `data` folder
