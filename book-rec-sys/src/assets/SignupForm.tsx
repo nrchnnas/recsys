@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { IoIosStar, IoIosStarOutline } from "react-icons/io";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 
 interface Book {
   title: string;
-  rating: number;
 }
 
 interface SignupFormProps {
@@ -26,7 +24,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [favoriteBooks, setFavoriteBooks] = useState<Book[]>([]);
   const [currentBook, setCurrentBook] = useState('');
-  const [currentRating, setCurrentRating] = useState(0);
   
   // Error state
   const [error, setError] = useState('');
@@ -48,24 +45,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
   
   // Add a book to favorites
   const addBook = () => {
-    if (currentBook.trim() && currentRating > 0) {
+    if (currentBook.trim()) {
       setFavoriteBooks([...favoriteBooks, { 
-        title: currentBook, 
-        rating: currentRating 
+        title: currentBook,  
       }]);
       setCurrentBook('');
-      setCurrentRating(0);
     }
   };
   
   // Remove a book from favorites
   const removeBook = (bookTitle: string) => {
     setFavoriteBooks(favoriteBooks.filter(book => book.title !== bookTitle));
-  };
-  
-  // Handle rating click
-  const handleRatingClick = (rating: number) => {
-    setCurrentRating(rating);
   };
   
   // Handle credentials submission
@@ -93,7 +83,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
     e.preventDefault();
     
     // Add the current book if input is not empty
-    if (currentBook.trim() && currentRating > 0) {
+    if (currentBook.trim()) {
       addBook();
     }
     
@@ -115,32 +105,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
     
     console.log('User signup data:', userData);
   };
-  
-  // Render star rating
-  const renderStarRating = (rating: number, onRatingClick: (r: number) => void) => (
-    <div style={{ display: 'flex', gap: '0.25rem' }}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <button
-          key={star}
-          type="button"
-          onClick={() => onRatingClick(star)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '4px',
-            color: '#0F9F90'
-          }}
-        >
-          {star <= rating ? (
-            <IoIosStar size={20} />
-          ) : (
-            <IoIosStarOutline size={20} />
-          )}
-        </button>
-      ))}
-    </div>
-  );
   
   return (
     <div style={{
@@ -374,7 +338,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
                     border: '1px solid #ccc'
                   }}
                 />
-                {renderStarRating(currentRating, handleRatingClick)}
+                
                 <button
                   type="button"
                   onClick={addBook}
@@ -405,7 +369,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBackToLogin, onSignup }) => {
                 >
                   <span>{book.title}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    {renderStarRating(book.rating, () => {})}
+                    
                     <button
                       type="button"
                       onClick={() => removeBook(book.title)}
