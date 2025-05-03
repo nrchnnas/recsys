@@ -2,10 +2,12 @@ import sqlite3
 import pandas as pd
 import os
 import json
+import re
 
 def csv_to_sqlite(csv_file, db_file):
     """
     Convert CSV file to SQLite database, reinitializing the database each time.
+    Ensures special characters are handled properly to avoid BLOB storage.
     
     Args:
         csv_file: Path to the input CSV file
@@ -29,8 +31,12 @@ def csv_to_sqlite(csv_file, db_file):
         print("Connecting to SQLite database...")
         conn = sqlite3.connect(db_file)
         
-        # Create a cursor
+        # Set explicit UTF-8 encoding
         cursor = conn.cursor()
+        cursor.execute("PRAGMA encoding = 'UTF-8'")
+        
+        # Set text_factory to ensure proper text handling
+        conn.text_factory = str
         
         # Get column names and types
         print("Analyzing column data types...")
@@ -42,7 +48,7 @@ def csv_to_sqlite(csv_file, db_file):
             
             if column == 'book_id':
                 # Make book_id the primary key
-                sql_type = "TEXT PRIMARY KEY"
+                sql_type = "INTEGER PRIMARY KEY"
             elif pd.api.types.is_integer_dtype(dtype):
                 sql_type = "INTEGER"
             elif pd.api.types.is_float_dtype(dtype):
@@ -67,6 +73,14 @@ def csv_to_sqlite(csv_file, db_file):
         
         # Process data for insertion
         print("Processing data for insertion...")
+        
+        # Clean text columns to handle special characters
+        for column, sql_type in column_info:
+            if sql_type == 'TEXT':
+                # Clean and sanitize text data
+                df[column] = df[column].apply(
+                    lambda x: clean_text(x) if pd.notna(x) else ""
+                )
         
         # Process similar_books column (convert to JSON string if not already)
         if 'similar_books' in df.columns:
@@ -134,6 +148,15 @@ def csv_to_sqlite(csv_file, db_file):
         if count != len(df):
             print(f"Warning: Row count mismatch. CSV has {len(df)} rows, database has {count} rows.")
         
+        # Verify text columns are stored correctly
+        print("Verifying text column storage types:")
+        for column, sql_type in column_info:
+            if sql_type == 'TEXT':
+                cursor.execute(f"SELECT typeof({column}) FROM books LIMIT 1")
+                actual_type = cursor.fetchone()
+                if actual_type:
+                    print(f"  Column '{column}' is stored as: {actual_type[0]}")
+        
         # Close the connection
         conn.close()
         
@@ -146,6 +169,23 @@ def csv_to_sqlite(csv_file, db_file):
         return False
     
     return True
+
+def clean_text(text):
+    """
+    Clean and sanitize text to ensure it's properly stored in SQLite.
+    Handles special characters and removes invalid byte sequences.
+    """
+    if text is None:
+        return ""
+    
+    # Convert to string if not already
+    if not isinstance(text, str):
+        text = str(text)
+    
+    # Remove control characters that can cause issues
+    text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', ' ', text)
+    
+    return text
 
 if __name__ == "__main__":
     input_file = "all_books_merged_50k.csv"  # Change to your input CSV file

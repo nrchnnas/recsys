@@ -27,9 +27,9 @@ class DescriptionOnlyRecommender:
         self.text_matrix = None
         
         # Vector embedding settings
-        self.vector_max_features = 5000  # Reduced from 5000 to 2000
-        self.vector_min_df = 5           # More aggressive filtering (from 2 to 5)
-        self.vector_max_df = 0.5         # More aggressive filtering (from 0.85 to 0.5)
+        self.vector_max_features = 5000
+        self.vector_min_df = 5
+        self.vector_max_df = 0.5
         
         # Weights for different recommendation methods
         self.similar_books_weight = 0.5
@@ -53,13 +53,11 @@ class DescriptionOnlyRecommender:
                 return False
         
         try:
-            # Select required columns
+            # Select only the columns that we know exist in the database
             query = """
             SELECT book_id, title_without_series, authors, description, 
                    average_rating, ratings_count, genres, similar_books,
-                   is_children, is_comics_graphics, is_fantasy_paranormal, 
-                   is_history_biography, is_mystery_thriller_crime, 
-                   is_poetry, is_romance, is_young_adult
+                   num_pages
             FROM books
             WHERE ratings_count > 20
             """
@@ -70,13 +68,9 @@ class DescriptionOnlyRecommender:
             load_time = time.time() - start_time
             print(f"Loaded {len(self.df)} books in {load_time:.2f} seconds")
             
-            # Identify genre columns
-            self.genre_columns = [col for col in self.df.columns if col.startswith('is_')]
-            print(f"Found {len(self.genre_columns)} genre columns")
-            
-            # Convert genre columns to integers
-            for col in self.genre_columns:
-                self.df[col] = self.df[col].apply(self._convert_to_int)
+            # Create genre columns from the genres field
+            print("Creating genre columns from 'genres' field...")
+            self._create_genre_columns_from_genres()
             
             # Parse similar_books if it exists
             if "similar_books" in self.df.columns:
@@ -101,7 +95,51 @@ class DescriptionOnlyRecommender:
             return True
         except Exception as e:
             print(f"Error loading data: {e}")
+            import traceback
+            traceback.print_exc()
             return False
+    
+    def _create_genre_columns_from_genres(self):
+        """Create binary genre columns from the 'genres' field."""
+        if 'genres' not in self.df.columns:
+            print("No 'genres' column found, cannot create genre columns")
+            return
+        
+        # Parse the genres field - we know they're comma-separated
+        def extract_genres(genres_str):
+            if pd.isna(genres_str) or not genres_str:
+                return []
+            
+            if isinstance(genres_str, str):
+                return [genre.strip() for genre in genres_str.split(',') if genre.strip()]
+            elif isinstance(genres_str, list):
+                return genres_str
+            
+            return []
+        
+        # Extract all genres
+        self.df['genre_list'] = self.df['genres'].apply(extract_genres)
+        
+        # Find the most common genres
+        all_genres = []
+        for genres in self.df['genre_list']:
+            all_genres.extend(genres)
+        
+        genre_counter = Counter([g.lower() for g in all_genres if g])
+        top_genres = [g for g, count in genre_counter.most_common(15) if count > 50]
+        
+        print(f"Found top genres: {top_genres}")
+        
+        # Create binary columns for top genres
+        for genre in top_genres:
+            safe_genre_name = re.sub(r'[^a-zA-Z0-9]', '_', genre.lower())
+            column_name = f"is_{safe_genre_name}"
+            self.df[column_name] = self.df['genre_list'].apply(
+                lambda x: 1 if any(g.lower() == genre.lower() for g in x) else 0
+            )
+            self.genre_columns.append(column_name)
+        
+        print(f"Created {len(self.genre_columns)} genre columns")
     
     def _create_basic_id_mappings(self):
         """Create simple mappings to handle common book ID format issues."""
@@ -146,9 +184,9 @@ class DescriptionOnlyRecommender:
         
         # Create the TF-IDF vectorizer with reduced dimensions
         self.text_vectorizer = TfidfVectorizer(
-            max_features=self.vector_max_features,  # Reduced dimensions 
-            min_df=self.vector_min_df,              # Ignore uncommon terms
-            max_df=self.vector_max_df,              # Ignore very common terms
+            max_features=self.vector_max_features,
+            min_df=self.vector_min_df,
+            max_df=self.vector_max_df,
             stop_words='english'
         )
         
@@ -318,7 +356,7 @@ class DescriptionOnlyRecommender:
                 lambda x: 1.0 if x in similar_id_set or self._normalize_book_id(x) in similar_id_set else 0.0
             )
             
-            # Check how many similar books are in our dataset
+            # Check how many similar books are in our database
             similar_books_count = filtered_df['similar_books_score'].sum()
             print(f"Found {int(similar_books_count)} similar books in our database")
         else:
@@ -531,12 +569,16 @@ if __name__ == "__main__":
     # Create recommender
     recommender = DescriptionOnlyRecommender("books.db")
     
+    # Default number of recommendations
+    num_recommendations = 5
+    
     # Load data and prepare vectors
     recommender.load_data()
     recommender.prepare_vector_embeddings()
     
     # Get recommendations based on input method
     print("\n--- BOOK RECOMMENDATIONS ---")
+    print(f"Showing top {num_recommendations} recommendations")
     print("Choose input method:")
     print("1. Single book title")
     print("2. Multiple book titles (comma-separated)")
@@ -545,10 +587,10 @@ if __name__ == "__main__":
     
     if choice == "1":
         book_title = input("Enter a book title: ")
-        recommendations = recommender.get_recommendations(title=book_title)
+        recommendations = recommender.get_recommendations(title=book_title, num_recommendations=num_recommendations)
     else:
         titles_input = input("Enter book titles, separated by commas: ")
-        recommendations = recommender.recommend_from_comma_separated_titles(titles_input)
+        recommendations = recommender.recommend_from_comma_separated_titles(titles_input, num_recommendations=num_recommendations)
     
     recommender.print_recommendations(recommendations)
     
