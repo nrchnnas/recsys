@@ -1,6 +1,7 @@
 import './main.css';
 import Title, { Panel } from './Home';
-import GenreGrid from './assets/GenreGrid';
+import SearchBar from './assets/SearchBar';
+import BookSearchResults from './assets/BookSearchResults'; 
 import BookList from './assets/BookList';
 import ShelfDetail from './assets/ShelfDetail';
 import ReviewForm from './assets/ReviewForm';
@@ -8,11 +9,6 @@ import AuthController from './assets/AuthController';
 import { AuthProvider, useAuth } from './assets/AuthContext';
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
-
-const genres = [
-  "Children", "Comics & Graphic", "Mystery, Thriller & Crime", "Poetry",
-  "Fantasy & Paranormal", "History & Biography", "Romance", "Young Adult"
-];
 
 const shelves = [
   "Favorites", "Currently Reading", "Want to Read", "Read Again"
@@ -72,47 +68,20 @@ const genreBooks = {
     { title: "Tales from Ovid" },
     { title: "The Odyssey (Emily Wilson Translation)" },
     { title: "The Heroes of Olympus: Blood of Olympus" }
-  ],
-  "Children": [
-    { title: "Harry Potter and the Sorcerer's Stone" },
-    { title: "Charlotte's Web" }
-  ],
-  "Comics & Graphic": [
-    { title: "Maus" },
-    { title: "Watchmen" }
-  ],
-  "Mystery, Thriller & Crime": [
-    { title: "Gone Girl" },
-    { title: "The Girl with the Dragon Tattoo" }
-  ],
-  "Poetry": [
-    { title: "Milk and Honey" },
-    { title: "Where the Sidewalk Ends" }
-  ],
-  "History & Biography": [
-    { title: "Sapiens" },
-    { title: "The Diary of a Young Girl" }
-  ],
-  "Romance": [
-    { title: "Pride and Prejudice" },
-    { title: "Outlander" }
-  ],
-  "Young Adult": [
-    { title: "The Hunger Games" },
-    { title: "The Fault in Our Stars" }
   ]
 };
 
 // The main app component that gets shown when authenticated
 const BookApp = () => {
-  const [activeView, setActiveView] = useState<'genre' | 'shelves' | 'book-list' | 'shelf-detail' | 'new-review'>('genre');
+  const [activeView, setActiveView] = useState<'home' | 'search-results' | 'shelves' | 'book-list' | 'shelf-detail' | 'new-review'>('home');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
   const [selectedShelf, setSelectedShelf] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const { logout, user } = useAuth();
 
-  const handleGenreClick = (genre: string) => {
-    setSelectedGenre(genre);
-    setActiveView('book-list');
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setActiveView('search-results');
   };
 
   const handleShelfClick = (shelf: string) => {
@@ -121,8 +90,8 @@ const BookApp = () => {
     setActiveView('shelf-detail');
   };
 
-  const handleBackToGenre = () => {
-    setActiveView('genre');
+  const handleBackToHome = () => {
+    setActiveView('home');
   };
 
   const handleBackToShelves = () => {
@@ -131,7 +100,7 @@ const BookApp = () => {
 
   const handleReviewSubmit = (reviewData: any) => {
     console.log("Review submitted:", reviewData);
-    setActiveView('genre');
+    setActiveView('home');
   };
 
   return (
@@ -162,27 +131,44 @@ const BookApp = () => {
 
       <div className="two-column-container">
         <div>
-          {activeView === 'genre' && (
+          {activeView === 'home' && (
             <>
               <div className="section-header">
-                <h3>Search By Genre</h3>
+                <h3>Search For Books</h3>
               </div>
-              <GenreGrid genres={genres} onGenreClick={handleGenreClick} />
+              <SearchBar onSearch={handleSearch} />
             </>
+          )}
+
+          {activeView === 'search-results' && (
+            <BookSearchResults 
+              query={searchQuery} 
+              onBackClick={handleBackToHome} 
+            />
           )}
 
           {activeView === 'shelves' && (
             <>
               <div className="section-header">
                 <button
-                  onClick={handleBackToGenre}
+                  onClick={handleBackToHome}
                   className="back-button"
                 >
                   <IoIosArrowBack />
                 </button>
                 <h3>Your Shelves</h3>
               </div>
-              <GenreGrid genres={shelves} onGenreClick={handleShelfClick} />
+              <div className="genre-grid">
+                {shelves.map((shelf) => (
+                  <button
+                    key={shelf}
+                    className="genre-button"
+                    onClick={() => handleShelfClick(shelf)}
+                  >
+                    {shelf}
+                  </button>
+                ))}
+              </div>
             </>
           )}
 
@@ -190,7 +176,7 @@ const BookApp = () => {
             <BookList 
               title={selectedGenre}
               books={genreBooks[selectedGenre as keyof typeof genreBooks] || []} 
-              onBackClick={handleBackToGenre} 
+              onBackClick={handleBackToHome} 
             />
           )}
           
@@ -205,7 +191,7 @@ const BookApp = () => {
 
           {activeView === 'new-review' && (
             <ReviewForm 
-              onBackClick={handleBackToGenre}
+              onBackClick={handleBackToHome}
               onSubmit={handleReviewSubmit}
             />
           )}
