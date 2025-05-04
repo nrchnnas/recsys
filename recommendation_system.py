@@ -32,8 +32,8 @@ class DescriptionOnlyRecommender:
         self.vector_max_df = 0.5
         
         # Weights for different recommendation methods
-        self.similar_books_weight = 0.5
-        self.vector_embedding_weight = 0.3
+        self.similar_books_weight = 0.1
+        self.vector_embedding_weight = 0.7
         self.genre_weight = 0.2
     
     def connect(self):

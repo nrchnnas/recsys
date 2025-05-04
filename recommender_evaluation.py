@@ -2,12 +2,13 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from collections import Counter
-import math
-import importlib.util
 import sys
 import os
 import traceback
 import io
+
+# Import the DescriptionOnlyRecommender class directly
+from recommendation_system import DescriptionOnlyRecommender
 
 # Windows-compatible encoding fixes
 try:
@@ -34,34 +35,6 @@ try:
 except Exception as e:
     print(f"Warning: Could not configure console encoding: {e}")
     print("Special characters may not display correctly.")
-
-# Import the DescriptionOnlyRecommender class from the recommendation system file
-# This approach handles different possible filenames
-def import_recommender_class():
-    # Try different possible filenames
-    possible_filenames = [
-        "recommendation-system.py",
-        "recommendation_system.py",
-        "recommender.py"
-    ]
-    
-    for filename in possible_filenames:
-        if os.path.exists(filename):
-            print(f"Found recommender file: {filename}")
-            # Import the module
-            spec = importlib.util.spec_from_file_location("recommender_module", filename)
-            recommender_module = importlib.util.module_from_spec(spec)
-            sys.modules["recommender_module"] = recommender_module
-            spec.loader.exec_module(recommender_module)
-            
-            # Return the class
-            return recommender_module.DescriptionOnlyRecommender
-    
-    # If we get here, we couldn't find the file
-    raise ImportError("Could not find the DescriptionOnlyRecommender class. Make sure recommendation-system.py is in the same directory.")
-
-# Import the recommender class
-DescriptionOnlyRecommender = import_recommender_class()
 
 class RecommenderEvaluator:
     """
