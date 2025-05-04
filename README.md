@@ -12,7 +12,7 @@
 ### deploy server
 1. open your terminal
 2. make sure your directory is `recsys`
-3. run 'python sever.py'
+3. run `python sever.py`
 ### deploy website 
 *note: deploy server first*
 1. open your terminal
