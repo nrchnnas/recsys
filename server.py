@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sys
 import os
-import traceback
 import pandas as pd
 
 # Import your recommender system
@@ -87,7 +86,6 @@ def get_recommendations():
         
     except Exception as e:
         print(f"Error getting recommendations: {e}")
-        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 @app.route('/')
