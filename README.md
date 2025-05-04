@@ -2,7 +2,7 @@
 ## required libraries to install before deployment 
 ### for server and recommender system
 1. download `books.db` at [this link](https://drive.google.com/file/d/1TKkd19sg1nJm3Cgyfc3V0vH4Cj_MY3sD/view?usp=sharing)
-2. cd into recsys/ and run "pip install -r requirements.txt"
+2. cd into recsys and run "pip install -r requirements.txt"
 
 ### for website 
 1. install [node.js](https://nodejs.org)
@@ -11,7 +11,7 @@
 ## how to deploy project
 ### deploy server
 1. open your terminal
-2. make sure your directory is `recsys/`
+2. make sure your directory is `recsys`
 3. run 'python sever.py'
 ### deploy website 
 *note: deploy server first*
