@@ -15,7 +15,7 @@ class DescriptionOnlyRecommender:
     2. Vector embedding of DESCRIPTION ONLY (medium weight)
     3. Genre matching (lowest weight)
     
-    With support for multiple book title input and performance optimizations
+    With support for single book title input
     """
     
     def __init__(self, db_path="books.db"):
@@ -270,20 +270,6 @@ class DescriptionOnlyRecommender:
         # Return the most popular match
         return matches.sort_values("ratings_count", ascending=False).iloc[0]
     
-    def find_books(self, titles):
-        """Find multiple books by their titles."""
-        found_books = []
-        not_found = []
-        
-        for title in titles:
-            book = self.find_book(title=title)
-            if book is not None:
-                found_books.append(book)
-            else:
-                not_found.append(title)
-        
-        return found_books, not_found
-    
     def get_recommendations(self, book_id=None, title=None, num_recommendations=10):
         """
         Get book recommendations based on a given book, prioritizing:
@@ -444,77 +430,6 @@ class DescriptionOnlyRecommender:
         
         return recommendations
     
-    def recommend_from_multiple_titles(self, titles, num_recommendations=10):
-        """
-        Generate book recommendations based on multiple input book titles.
-        
-        Args:
-            titles: List of book titles
-            num_recommendations: Number of recommendations to return
-            
-        Returns:
-            DataFrame containing recommendations
-        """
-        if not titles:
-            print("No titles provided")
-            return pd.DataFrame()
-            
-        # Find the books
-        found_books, not_found = self.find_books(titles)
-        
-        if not found_books:
-            print("None of the provided titles were found")
-            return pd.DataFrame()
-        
-        print(f"Found {len(found_books)} of {len(titles)} provided titles")
-        if not_found:
-            print(f"Titles not found: {', '.join(not_found)}")
-        
-        # Get individual recommendations for each book
-        all_recommendations = []
-        for book in found_books:
-            print(f"\nProcessing recommendations for: {book['title_without_series']}")
-            # Get fewer recommendations per book when there are multiple inputs
-            per_book_recs = max(3, int(num_recommendations / len(found_books)))
-            book_recs = self.get_recommendations(book_id=book['book_id'], num_recommendations=per_book_recs)
-            if len(book_recs) > 0:
-                all_recommendations.append(book_recs)
-        
-        if not all_recommendations:
-            return pd.DataFrame()
-        
-        # Combine all recommendations
-        combined_recommendations = pd.concat(all_recommendations).copy()
-        
-        # Remove input books from recommendations
-        input_book_ids = [book['book_id'] for book in found_books]
-        combined_recommendations = combined_recommendations[~combined_recommendations['book_id'].isin(input_book_ids)]
-        
-        # Remove duplicates and count frequency (how many source books recommended each book)
-        combined_recommendations = combined_recommendations.drop_duplicates(subset=['book_id'])
-        book_counts = Counter(combined_recommendations['book_id'])
-        combined_recommendations['frequency'] = combined_recommendations['book_id'].apply(lambda x: book_counts[x])
-        
-        # Sort by frequency (most important) and then by average score
-        result = combined_recommendations.sort_values(['frequency', 'final_score'], ascending=[False, False])
-        
-        return result.head(num_recommendations)
-
-    def recommend_from_comma_separated_titles(self, comma_separated_titles, num_recommendations=10):
-        """
-        Convenience method to accept a comma-separated string of titles.
-        
-        Args:
-            comma_separated_titles: String containing titles separated by commas
-            num_recommendations: Number of recommendations to return
-            
-        Returns:
-            DataFrame containing recommendations
-        """
-        # Split the string and clean up the titles
-        titles = [title.strip() for title in comma_separated_titles.split(',') if title.strip()]
-        return self.recommend_from_multiple_titles(titles, num_recommendations)
-    
     def print_recommendations(self, recommendations):
         """Print recommendations in a readable format."""
         if len(recommendations) == 0:
@@ -523,11 +438,10 @@ class DescriptionOnlyRecommender:
         
         print("\n=== Book Recommendations ===\n")
         
-        # Group by source book if that information is available
+        # Print source book if that information is available
         if 'source_book' in recommendations.columns:
-            source_books = set(recommendations['source_book'])
-            if len(source_books) > 1:
-                print(f"Based on {len(source_books)} input books: {', '.join(source_books)}\n")
+            source_book = recommendations['source_book'].iloc[0]
+            print(f"Based on: {source_book}\n")
         
         for i, (_, book) in enumerate(recommendations.iterrows(), 1):
             print(f"{i}. {book['title_without_series']}")
@@ -543,10 +457,6 @@ class DescriptionOnlyRecommender:
                 print(f"   Genre match: {book['genre_score']:.2f}")
             if 'final_score' in book:
                 print(f"   Overall score: {book['final_score']:.2f}")
-            
-            # Print source book if available
-            if 'source_book' in book and len(set(recommendations['source_book'])) > 1:
-                print(f"   Recommended from: {book['source_book']}")
                 
             # Print recommendation reason
             if 'recommendation_reason' in book:
@@ -576,21 +486,12 @@ if __name__ == "__main__":
     recommender.load_data()
     recommender.prepare_vector_embeddings()
     
-    # Get recommendations based on input method
+    # Get recommendations based on a single book title
     print("\n--- BOOK RECOMMENDATIONS ---")
     print(f"Showing top {num_recommendations} recommendations")
-    print("Choose input method:")
-    print("1. Single book title")
-    print("2. Multiple book titles (comma-separated)")
     
-    choice = input("Enter your choice (1 or 2): ")
-    
-    if choice == "1":
-        book_title = input("Enter a book title: ")
-        recommendations = recommender.get_recommendations(title=book_title, num_recommendations=num_recommendations)
-    else:
-        titles_input = input("Enter book titles, separated by commas: ")
-        recommendations = recommender.recommend_from_comma_separated_titles(titles_input, num_recommendations=num_recommendations)
+    book_title = input("Enter a book title: ")
+    recommendations = recommender.get_recommendations(title=book_title, num_recommendations=num_recommendations)
     
     recommender.print_recommendations(recommendations)
     
