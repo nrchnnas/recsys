@@ -513,6 +513,56 @@ input[type="checkbox"] {
   justify-content: center;
 }
 
+/* Search Bar Styles */
+.search-bar {
+  position: relative;
+  top: 112px;
+  left: 100px;
+  max-width: 600px;
+  margin-bottom: var(--spacing-xl);
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: 3px solid var(--border-accent);
+  font-family: inherit;
+  font-size: 1.2rem;
+  box-sizing: border-box;
+  padding-right: 3rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(15, 159, 144, 0.2);
+}
+
+.search-button {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm);
+}
+
+.search-button:hover {
+  color: var(--primary-darker);
+}
+
 /* ==========================================================================
    Utility Classes
    ========================================================================== */

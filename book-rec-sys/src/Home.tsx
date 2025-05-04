@@ -2,39 +2,12 @@ import { RiBookShelfLine } from "react-icons/ri";
 import { FaBookBookmark } from "react-icons/fa6";
 import { FaPencilAlt } from "react-icons/fa";
 import { useState } from 'react';
-import GenreGrid from './assets/GenreGrid';
-
-const genres = [
-    "Children",
-    "Comics & Graphic",
-    "Mystery, Thriller & Crime",
-    "Poetry",
-    "Fantasy & Paranormal",
-    "History & Biography",
-    "Romance",
-    "Young Adult"
-];
 
 function Title() {
     return (
         <div>
             <h1>What Should I Read Today?</h1>
             <h2>let us help you find your next book</h2>
-        </div>
-    );
-}
-
-function GenreSection() {
-    const handleGenreClick = (genre: string) => {
-        console.log("Genre selected:", genre);
-    };
-
-    return (
-        <div className="main-container">
-            <div className="section-header">
-                <h3>Search By Genre</h3>
-            </div>
-            <GenreGrid genres={genres} onGenreClick={handleGenreClick} />
         </div>
     );
 }
@@ -127,4 +100,4 @@ function Panel({ onViewShelvesClick, onAddNewReviewClick }: PanelProps) {
 }
 
 export default Title;
-export { Panel, GenreSection };
+export { Panel };

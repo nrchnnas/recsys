@@ -63,7 +63,7 @@ def get_recommendations():
         recommendation_strings = []
         for i, (_, book) in enumerate(recommendations.iterrows(), 1):
             # Just include title and rating
-            rec_string = f"{book['title_without_series']} - {book['average_rating']}"
+            rec_string = f"{book['title_without_series']}"
             recommendation_strings.append(rec_string)
         
         # Create a header
