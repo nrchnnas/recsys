@@ -1,14 +1,18 @@
 # [AIC-601] Book Recommender System 📚
 ## required libraries to install before deployment 
-### for server
+### for server and recommender system
 1. download `books.db` at [this link](https://drive.google.com/file/d/1TKkd19sg1nJm3Cgyfc3V0vH4Cj_MY3sD/view?usp=sharing)
+2. cd into recsys/ and run "pip install -r requirements.txt"
+
 ### for website 
 1. install [node.js](https://nodejs.org)
 2. ensure that you installed node.js correctly by executing `node -v` and `npm -v` in terminal 
 
 ## how to deploy project
 ### deploy server
-1. to be written
+1. open your terminal
+2. make sure your directory is `recsys/`
+3. run 'python sever.py'
 ### deploy website 
 *note: deploy server first*
 1. open your terminal
@@ -23,3 +27,8 @@
 3. create new folder called `data`
 4. add `books.db` into `data` folder
 5. execute each cell or run all in `eda.ipynb`
+
+### how to run recommender_evaluation.py
+1. download `filtered_interactions.csv` at [this link](https://drive.google.com/file/d/1KB0e3Iiz3UW9NoSUpSZNZhrIS6ZvJOkj/view?usp=sharing)
+2. make sure 'filtered_interactions.csv is in the same directory as recommender_evaluation
+3. run 'python recommender_evaluation.py' 

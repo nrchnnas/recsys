@@ -1,21 +1,20 @@
-import sqlite3
-import numpy as np
-import pandas as pd
+import time
 from collections import Counter
 import json
 import re
+import sqlite3
+import numpy as np
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import time
 
 class DescriptionOnlyRecommender:
     """
     A book recommendation system that prioritizes:
-    1. Similar books data (highest weight)
-    2. Vector embedding of DESCRIPTION ONLY (medium weight)
+    1. Similar books data (medium weight)
+    2. Vector embedding of DESCRIPTION ONLY (highest weight)
     3. Genre matching (lowest weight)
     
-    With support for single book title input
     """
     
     def __init__(self, db_path="books.db"):
@@ -37,7 +36,7 @@ class DescriptionOnlyRecommender:
         self.genre_weight = 0.2
     
     def connect(self):
-        """Connect to the SQLite database."""
+
         try:
             self.conn = sqlite3.connect(self.db_path)
             print(f"Connected to database: {self.db_path}")
@@ -47,7 +46,6 @@ class DescriptionOnlyRecommender:
             return False
     
     def load_data(self):
-        """Load book data from the database."""
         if not self.conn:
             if not self.connect():
                 return False
@@ -100,7 +98,6 @@ class DescriptionOnlyRecommender:
             return False
     
     def _create_genre_columns_from_genres(self):
-        """Create binary genre columns from the 'genres' field."""
         if 'genres' not in self.df.columns:
             print("No 'genres' column found, cannot create genre columns")
             return
@@ -271,12 +268,7 @@ class DescriptionOnlyRecommender:
         return matches.sort_values("ratings_count", ascending=False).iloc[0]
     
     def get_recommendations(self, book_id=None, title=None, num_recommendations=10):
-        """
-        Get book recommendations based on a given book, prioritizing:
-        1. Similar books data (highest weight)
-        2. Vector embedding similarity of description (medium weight)
-        3. Genre matching (lowest weight)
-        """
+
         if self.df is None:
             if not self.load_data():
                 return pd.DataFrame()
@@ -431,7 +423,6 @@ class DescriptionOnlyRecommender:
         return recommendations
     
     def print_recommendations(self, recommendations):
-        """Print recommendations in a readable format."""
         if len(recommendations) == 0:
             print("No recommendations found")
             return
@@ -468,7 +459,6 @@ class DescriptionOnlyRecommender:
             print()
     
     def close(self):
-        """Close the database connection."""
         if self.conn:
             self.conn.close()
             print("Database connection closed")

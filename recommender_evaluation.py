@@ -1,13 +1,12 @@
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
 from collections import Counter
 import sys
 import os
 import traceback
 import io
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
 
-# Import the DescriptionOnlyRecommender class directly
 from recommendation_system import DescriptionOnlyRecommender
 
 # Windows-compatible encoding fixes
@@ -21,14 +20,7 @@ try:
         if hasattr(sys.stdout, 'reconfigure'):
             # For Python 3.7+ 
             sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-        else:
-            # For older Python versions, try using specialized handling
-            try:
-                import win_unicode_console
-                win_unicode_console.enable()
-            except ImportError:
-                # If win_unicode_console is not available, just try to use a reasonable fallback
-                pass
+
     else:
         # Non-Windows systems
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
@@ -45,14 +37,6 @@ class RecommenderEvaluator:
     """
     
     def __init__(self, recommender, interactions_path, k=5):
-        """
-        Initialize the evaluator.
-        
-        Args:
-            recommender: The recommendation system instance
-            interactions_path: Path to the user interactions CSV file
-            k: Number of recommendations to evaluate (default: 5)
-        """
         self.recommender = recommender
         self.interactions_df = pd.read_csv(interactions_path)
         self.k = k
@@ -66,7 +50,6 @@ class RecommenderEvaluator:
         self.calculate_book_popularity()
         
     def calculate_book_popularity(self):
-        """Calculate popularity of each book (percentage of users who have read it)"""
         # Count unique users who have read each book
         book_reader_counts = self.interactions_df.groupby('book_id').user_id.nunique()
         
@@ -77,7 +60,6 @@ class RecommenderEvaluator:
         self.popularity_scores = book_reader_counts / total_users
     
     def print_debug_info(self):
-        """Print debug information about the data."""
         try:
             print("\n=== DEBUG INFORMATION ===")
             
@@ -170,16 +152,7 @@ class RecommenderEvaluator:
             return None, None
     
     def generate_recommendations_for_user(self, user_id, train_df):
-        """
-        Generate recommendations for a user based on their training data.
-        
-        Args:
-            user_id: User ID
-            train_df: DataFrame with user's training interactions
-            
-        Returns:
-            DataFrame with recommendations
-        """
+
         # Extract book IDs from training data
         training_book_ids = train_df['book_id'].tolist()
         
@@ -274,17 +247,6 @@ class RecommenderEvaluator:
         return sorted_recommendations.head(self.k)
     
     def calculate_ndcg(self, recommendations, test_df, k=None):
-        """
-        Calculate NDCG (Normalized Discounted Cumulative Gain) for recommendations.
-        
-        Args:
-            recommendations: DataFrame with recommendations
-            test_df: DataFrame with test interactions
-            k: Number of recommendations to consider (default: None, uses self.k)
-            
-        Returns:
-            NDCG score
-        """
         if k is None:
             k = self.k
             
@@ -325,16 +287,6 @@ class RecommenderEvaluator:
         return 0.0
     
     def calculate_novelty(self, recommendations, k=None):
-        """
-        Calculate novelty of recommendations based on inverse popularity.
-        
-        Args:
-            recommendations: DataFrame with recommendations
-            k: Number of recommendations to consider
-            
-        Returns:
-            Average novelty score
-        """
         if k is None:
             k = self.k
             
@@ -358,18 +310,6 @@ class RecommenderEvaluator:
         return 0.0
     
     def calculate_precision_at_k(self, recommendations, test_df, k=None, relevance_threshold=3.5):
-        """
-        Calculate Precision@k: what fraction of recommendations were relevant.
-        
-        Args:
-            recommendations: DataFrame with recommendations
-            test_df: DataFrame with test interactions
-            k: Number of recommendations to consider
-            relevance_threshold: Minimum rating to consider relevant
-            
-        Returns:
-            Precision@k score
-        """
         if k is None:
             k = self.k
             
@@ -393,17 +333,6 @@ class RecommenderEvaluator:
         return 0.0
     
     def calculate_recall(self, recommendations, test_df, relevance_threshold=3.5):
-        """
-        Calculate Recall: what fraction of relevant items were recommended.
-        
-        Args:
-            recommendations: DataFrame with recommendations
-            test_df: DataFrame with test interactions
-            relevance_threshold: Minimum rating to consider relevant
-            
-        Returns:
-            Recall score
-        """
         if len(recommendations) == 0 or len(test_df) == 0:
             return 0.0
         
@@ -421,15 +350,6 @@ class RecommenderEvaluator:
         return len(relevant_recommendations) / len(relevant_books)
     
     def evaluate_for_user(self, user_id):
-        """
-        Evaluate recommender performance for a single user.
-        
-        Args:
-            user_id: User ID to evaluate
-            
-        Returns:
-            Dictionary with evaluation metrics or None if evaluation not possible
-        """
         # Prepare user data
         train_df, test_df = self.prepare_user_data(user_id)
         if train_df is None or len(train_df) == 0 or len(test_df) == 0:
@@ -458,17 +378,6 @@ class RecommenderEvaluator:
         }
     
     def evaluate_all_users(self, max_users=None, debug=False, min_interactions=1):
-        """
-        Evaluate the recommender system for all users.
-        
-        Args:
-            max_users: Maximum number of users to evaluate (for testing)
-            debug: Whether to print debug information
-            min_interactions: Minimum number of interactions required (default: 1)
-            
-        Returns:
-            DataFrame with evaluation results for all users, and dictionary with average metrics
-        """
         if debug:
             self.print_debug_info()
         

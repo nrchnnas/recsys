@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import sys
 import os
-import pandas as pd
 
 # Import your recommender system
 from recommendation_system import DescriptionOnlyRecommender
@@ -20,15 +18,7 @@ print("Recommender system initialized successfully!")
 
 @app.route('/api/recommend', methods=['GET', 'POST'])
 def get_recommendations():
-    """
-    Get book recommendations based on input parameters
-    
-    Accepted parameters:
-    - book_title: String - book title to get recommendations for
-    - num: Integer - number of recommendations to return (default: 5)
-    
-    Returns string recommendations in a simple text format
-    """
+
     try:
         # Check if it's a GET or POST request and get parameters accordingly
         if request.method == 'GET':
