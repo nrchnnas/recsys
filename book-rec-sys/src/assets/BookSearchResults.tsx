@@ -23,14 +23,18 @@ const BookSearchResults = ({ query, onBackClick }: BookSearchResultsProps) => {
       setError(null);
       
       try {
-        // Call the API endpoint
-        const response = await fetch(`/api/recommend?book_title=${encodeURIComponent(query)}&num=10`);
+        console.log(`Searching for: ${query}`);
+        
+        // Call the API endpoint with the correct URL for localhost
+        const API_URL = 'http://localhost:8000/api/recommend';
+        const response = await fetch(`${API_URL}?book_title=${encodeURIComponent(query)}&num=10`);
         
         if (!response.ok) {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
+        console.log('API response:', data);
         
         // Transform the recommendations_list into the format we expect
         if (data.recommendations_list && Array.isArray(data.recommendations_list)) {
